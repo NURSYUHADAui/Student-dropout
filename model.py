@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import warnings
-warnings.filterwarnings('ignore')
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -15,12 +13,8 @@ from sklearn.metrics import (
     confusion_matrix, ConfusionMatrixDisplay
 )
 
-import os
-os.makedirs('figures', exist_ok=True)
-
-# ==============================================================
 # 1. LOAD & PREPROCESS
-# ==============================================================
+
 df = pd.read_csv("dataset.csv")
 
 le = LabelEncoder()
@@ -39,9 +33,7 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled  = scaler.transform(X_test)
 
-# ==============================================================
 # 2. BASELINE MODELS (all 34 features)
-# ==============================================================
 print("\n--- BASELINE ---")
 
 lr_base = LogisticRegression(max_iter=1000, random_state=42)
@@ -76,23 +68,18 @@ plt.tight_layout()
 plt.savefig('figures/cm_baseline.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# ==============================================================
 # 3. FEATURE SELECTION — Correlation-Based Filter (threshold=0.9)
-# ==============================================================
 print("\n--- FEATURE SELECTION (Correlation-Based) ---")
 
-# Compute correlation matrix on training set
 corr_matrix = pd.DataFrame(X_train_scaled, columns=X.columns).corr().abs()
 
-# Plot full correlation heatmap
 plt.figure(figsize=(14, 12))
 sns.heatmap(corr_matrix, cmap='coolwarm', annot=False, linewidths=0.3)
 plt.title('Feature Correlation Matrix (before selection)', fontweight='bold')
 plt.tight_layout()
-plt.savefig('figures/correlation_heatmap.png', dpi=150)
+plt.savefig('figures/correlation_heatmap.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# Keep upper triangle, drop features with correlation > 0.9
 upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
 threshold = 0.9
 to_drop = [col for col in upper.columns if any(upper[col] > threshold)]
@@ -102,7 +89,6 @@ selected_features = [col for col in X.columns if col not in to_drop]
 n_fs = len(selected_features)
 print(f"Features kept: {n_fs} / {X.shape[1]}")
 
-# Apply selection
 X_train_fs = pd.DataFrame(X_train_scaled, columns=X.columns)[selected_features].values
 X_test_fs  = pd.DataFrame(X_test_scaled,  columns=X.columns)[selected_features].values
 
@@ -138,9 +124,7 @@ plt.tight_layout()
 plt.savefig('figures/cm_feature_selection.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# ==============================================================
 # 4. FEATURE EXTRACTION — PCA (95% variance retained)
-# ==============================================================
 print("\n--- PCA ---")
 
 pca_full = PCA(random_state=42)
@@ -163,13 +147,13 @@ axes[1].set_xlabel('Number of Components')
 axes[1].set_ylabel('Cumulative Variance (%)')
 axes[1].legend()
 plt.tight_layout()
-plt.savefig('figures/pca_variance.png', dpi=150)
+plt.savefig('figures/pca_variance.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 pca = PCA(n_components=n_components, random_state=42)
 X_train_pca = pca.fit_transform(X_train_scaled)
 X_test_pca  = pca.transform(X_test_scaled)
-print(f"Reduced: {X_train_scaled.shape[1]} → {X_train_pca.shape[1]} components")
+print(f"Reduced: {X_train_scaled.shape[1]} -> {X_train_pca.shape[1]} components")
 
 fig, ax = plt.subplots(figsize=(8, 6))
 for cls, color in zip(le.classes_, ['#2196F3', '#F44336', '#4CAF50']):
@@ -177,9 +161,11 @@ for cls, color in zip(le.classes_, ['#2196F3', '#F44336', '#4CAF50']):
     ax.scatter(X_train_pca[idx, 0], X_train_pca[idx, 1],
                label=cls, alpha=0.4, s=15, color=color)
 ax.set_title('PCA — First Two Principal Components', fontweight='bold')
-ax.set_xlabel('PC1'); ax.set_ylabel('PC2'); ax.legend()
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC2')
+ax.legend()
 plt.tight_layout()
-plt.savefig('figures/pca_scatter.png', dpi=150)
+plt.savefig('figures/pca_scatter.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 lr_pca = LogisticRegression(max_iter=1000, random_state=42)
@@ -214,9 +200,7 @@ plt.tight_layout()
 plt.savefig('figures/cm_pca.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# ==============================================================
 # 5. ACCURACY COMPARISON CHART
-# ==============================================================
 categories = [f'Baseline\n(34 features)', f'Correlation FS\n({n_fs} features)', 'PCA']
 lr_scores  = [lr_base_acc * 100, lr_fs_acc * 100, lr_pca_acc * 100]
 rf_scores  = [rf_base_acc * 100, rf_fs_acc * 100, rf_pca_acc * 100]
@@ -236,12 +220,10 @@ ax.set_xticklabels(categories)
 ax.set_ylim(0, 105)
 ax.legend()
 plt.tight_layout()
-plt.savefig('figures/accuracy_comparison.png', dpi=150)
+plt.savefig('figures/accuracy_comparison.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# ==============================================================
 # 6. FINAL SUMMARY
-# ==============================================================
 print("\n" + "=" * 65)
 print("FINAL PERFORMANCE SUMMARY")
 print("=" * 65)
