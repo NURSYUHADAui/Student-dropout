@@ -68,26 +68,33 @@ print("Rows after duplicate removal:", len(df))
 df = df.dropna()
 print("Rows after dropna():", len(df))
 
-# Detect outliers using boxplots for key numerical features
+# Boxplots
 sns.boxplot(x=df['Grade_1st_Sem'])
 plt.title("Boxplot - Grade 1st Semester")
+plt.tight_layout()
+plt.savefig('figures/boxplot_grade1.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 sns.boxplot(x=df['Grade_2nd_Sem'])
 plt.title("Boxplot - Grade 2nd Semester")
+plt.tight_layout()
+plt.savefig('figures/boxplot_grade2.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 sns.boxplot(x=df['Age at enrollment'])
 plt.title("Boxplot - Age at Enrollment")
+plt.tight_layout()
+plt.savefig('figures/boxplot_age.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# Plot features against each other using scatter plots
+# Scatter plots
 plt.figure(figsize=(8, 5))
 plt.scatter(df['Grade_1st_Sem'], df['Grade_2nd_Sem'], alpha=0.4, color='steelblue', s=15)
 plt.xlabel("Grade 1st Semester")
 plt.ylabel("Grade 2nd Semester")
 plt.title("Scatter Plot: Grade 1st Sem vs Grade 2nd Sem")
 plt.tight_layout()
+plt.savefig('figures/scatter_grades.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 plt.figure(figsize=(8, 5))
@@ -96,22 +103,44 @@ plt.xlabel("Age at Enrollment")
 plt.ylabel("Grade 1st Semester")
 plt.title("Scatter Plot: Age at Enrollment vs Grade 1st Sem")
 plt.tight_layout()
+plt.savefig('figures/scatter_age_grade.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# Plot feature frequency using histograms
+plt.figure(figsize=(8, 5))
+plt.scatter(df['Age at enrollment'], df['Grade_2nd_Sem'], alpha=0.4, color='darkorange', s=15)
+plt.xlabel("Age at Enrollment")
+plt.ylabel("Grade 2nd Semester")
+plt.title("Scatter Plot: Age at Enrollment vs Grade 2nd Sem")
+plt.tight_layout()
+plt.savefig('figures/scatter_age_grade.png', dpi=150, bbox_inches='tight')
+plt.show()
+
+# Histograms
 df['Grade_1st_Sem'].hist(bins=30)
 plt.title("Histogram - Grade 1st Semester")
 plt.xlabel("Grade")
 plt.ylabel("Frequency")
+plt.tight_layout()
+plt.savefig('figures/histogram_grade1.png', dpi=150, bbox_inches='tight')
+plt.show()
+
+df['Grade_2nd_Sem'].hist(bins=30)
+plt.title("Histogram - Grade 2nd Semester")
+plt.xlabel("Grade")
+plt.ylabel("Frequency")
+plt.tight_layout()
+plt.savefig('figures/histogram_grade2.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 df['Age at enrollment'].hist(bins=30)
 plt.title("Histogram - Age at Enrollment")
 plt.xlabel("Age")
 plt.ylabel("Frequency")
+plt.tight_layout()
+plt.savefig('figures/histogram_age.png', dpi=150, bbox_inches='tight')
 plt.show()
 
-# Use a heatmap to visualize correlations
+# Correlation heatmap
 numeric_cols = [
     'Grade_1st_Sem', 'Grade_2nd_Sem',
     'Units_1st_Enrolled', 'Units_1st_Approved',
@@ -122,4 +151,5 @@ plt.figure(figsize=(10, 8))
 sns.heatmap(df[numeric_cols].corr(), annot=True, cmap='coolwarm')
 plt.title("Correlation Heatmap")
 plt.tight_layout()
+plt.savefig('figures/eda_correlation_heatmap.png', dpi=150, bbox_inches='tight')
 plt.show()
