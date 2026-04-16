@@ -65,7 +65,6 @@ for ax, pred, title in zip(
     ax.set_title(title, fontweight='bold')
 plt.suptitle('Confusion Matrices — Baseline', y=1.02)
 plt.tight_layout()
-plt.savefig('figures/cm_baseline.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # 3. FEATURE SELECTION — Correlation-Based Filter (threshold=0.9)
@@ -77,7 +76,6 @@ plt.figure(figsize=(14, 12))
 sns.heatmap(corr_matrix, cmap='coolwarm', annot=False, linewidths=0.3)
 plt.title('Feature Correlation Matrix (before selection)', fontweight='bold')
 plt.tight_layout()
-plt.savefig('figures/correlation_heatmap.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
@@ -121,7 +119,6 @@ for ax, pred, title in zip(
     ax.set_title(title, fontweight='bold')
 plt.suptitle('Confusion Matrices — Correlation Feature Selection', y=1.02)
 plt.tight_layout()
-plt.savefig('figures/cm_feature_selection.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # 4. FEATURE EXTRACTION — PCA (95% variance retained)
@@ -147,7 +144,6 @@ axes[1].set_xlabel('Number of Components')
 axes[1].set_ylabel('Cumulative Variance (%)')
 axes[1].legend()
 plt.tight_layout()
-plt.savefig('figures/pca_variance.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 pca = PCA(n_components=n_components, random_state=42)
@@ -165,7 +161,6 @@ ax.set_xlabel('PC1')
 ax.set_ylabel('PC2')
 ax.legend()
 plt.tight_layout()
-plt.savefig('figures/pca_scatter.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 lr_pca = LogisticRegression(max_iter=1000, random_state=42)
@@ -197,7 +192,6 @@ for ax, pred, title in zip(
     ax.set_title(title, fontweight='bold')
 plt.suptitle('Confusion Matrices — PCA', y=1.02)
 plt.tight_layout()
-plt.savefig('figures/cm_pca.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # 5. ACCURACY COMPARISON CHART
@@ -220,7 +214,6 @@ ax.set_xticklabels(categories)
 ax.set_ylim(0, 105)
 ax.legend()
 plt.tight_layout()
-plt.savefig('figures/accuracy_comparison.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # 6. FINAL SUMMARY
