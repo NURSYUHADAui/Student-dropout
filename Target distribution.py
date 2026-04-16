@@ -29,5 +29,4 @@ for bar in bars:
              int(height), ha='center', fontsize=12)
 
 plt.tight_layout()
-plt.savefig('figures/target_distribution.png', dpi=150, bbox_inches='tight')
 plt.show()
